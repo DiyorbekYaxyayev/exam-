@@ -1,15 +1,20 @@
 from django.shortcuts import render
 
-# Create your views here.
-from rest_framework import viewsets
+from rest_framework import viewsets, views
+from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
 from .models import Category, SubCategory, Product
-from .serializers import CategorySerializer, SubCategorySerializer, ProductSerializer
+from .serializers import CategorySerializer, SubCategorySerializer, ProductSerializer, UserProfileSerializer
+
+class UserProfileView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        user = request.user   
+        return Response({"user_info": UserProfileSerializer(user).data})
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    lookup_field = 'slug'  # 🔥 Slug bo‘yicha olish
+    lookup_field = 'slug' 
 
 class SubCategoryViewSet(viewsets.ModelViewSet):
     queryset = SubCategory.objects.all()
